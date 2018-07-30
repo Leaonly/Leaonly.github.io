@@ -6,26 +6,26 @@
     
 
     
-    <title>Linux 网络基础命令 | Leaonly&#39;s Blog</title>
+    <title>SAMBA共享文件配置 | Leaonly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Linux,IP,DNS" />
+        <meta name="keywords" content="Linux,共享" />
     
-    <meta name="description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
-<meta name="keywords" content="Linux,IP,DNS">
+    <meta name="description" content="一、SAMBA基础TCP 139端口、 445端口UDP 137、138端口 二、服务器搭建1、安装SAMBA1yum install samba -y 2、配置SAMBA 备份SAMBA配置文件1cp /etc/samba/smb.conf . 过滤SAMBA配置文件1cat smb.conf |grep -v &quot;#&quot;|grep -v &quot;;&quot;|grep -v &quot;^$&quot;&amp;gt;123 vim 12">
+<meta name="keywords" content="Linux,共享">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 网络基础命令">
-<meta property="og:url" content="https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/index.html">
+<meta property="og:title" content="SAMBA共享文件配置">
+<meta property="og:url" content="https://itcuihao.github.io/2018/07/25/SAMBA共享文件配置/index.html">
 <meta property="og:site_name" content="Leaonly&#39;s Blog">
-<meta property="og:description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
+<meta property="og:description" content="一、SAMBA基础TCP 139端口、 445端口UDP 137、138端口 二、服务器搭建1、安装SAMBA1yum install samba -y 2、配置SAMBA 备份SAMBA配置文件1cp /etc/samba/smb.conf . 过滤SAMBA配置文件1cat smb.conf |grep -v &quot;#&quot;|grep -v &quot;;&quot;|grep -v &quot;^$&quot;&amp;gt;123 vim 12">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://itcuihao.github.io/libs/cover-3.png">
-<meta property="og:updated_time" content="2018-07-21T02:43:01.027Z">
+<meta property="og:image" content="https://itcuihao.github.io/libs/cover-7.jpg">
+<meta property="og:updated_time" content="2018-07-25T04:05:24.068Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux 网络基础命令">
-<meta name="twitter:description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
-<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-3.png">
+<meta name="twitter:title" content="SAMBA共享文件配置">
+<meta name="twitter:description" content="一、SAMBA基础TCP 139端口、 445端口UDP 137、138端口 二、服务器搭建1、安装SAMBA1yum install samba -y 2、配置SAMBA 备份SAMBA配置文件1cp /etc/samba/smb.conf . 过滤SAMBA配置文件1cat smb.conf |grep -v &quot;#&quot;|grep -v &quot;;&quot;|grep -v &quot;^$&quot;&amp;gt;123 vim 12">
+<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-7.jpg">
     
 
     
@@ -138,14 +138,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Linux-网络基础命令" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-SAMBA共享文件配置" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Linux 网络基础命令
+        SAMBA共享文件配置
         </h1>
     
 
@@ -155,35 +155,59 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/07/17/Linux-网络基础命令/" class="article-date">
-            <time datetime="2018-07-17T08:41:50.000Z" itemprop="datePublished">2018-07-17</time>
+        <a href="/2018/07/25/SAMBA共享文件配置/" class="article-date">
+            <time datetime="2018-07-25T03:23:15.000Z" itemprop="datePublished">2018-07-25</time>
         </a>
     </div>
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/DNS/">DNS</a>, <a class="tag-link" href="/tags/IP/">IP</a>, <a class="tag-link" href="/tags/Linux/">Linux</a>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>, <a class="tag-link" href="/tags/共享/">共享</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <hr>
-<h3 id="自动获取IP"><a href="#自动获取IP" class="headerlink" title="自动获取IP"></a>自动获取IP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dhclient</span><br></pre></td></tr></table></figure>
-<h3 id="查看IP"><a href="#查看IP" class="headerlink" title="查看IP"></a>查看IP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr</span><br></pre></td></tr></table></figure>
-<h3 id="查看网路配置"><a href="#查看网路配置" class="headerlink" title="查看网路配置"></a>查看网路配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
-<h3 id="重启一下网络网卡-服务"><a href="#重启一下网络网卡-服务" class="headerlink" title="重启一下网络网卡 服务"></a>重启一下网络网卡 服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network restart</span><br></pre></td></tr></table></figure>
-<h3 id="手动配置IP"><a href="#手动配置IP" class="headerlink" title="手动配置IP"></a>手动配置IP</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">ONBOOT=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">IPADDR=172.17.8.250</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=172.17.8.1</span><br><span class="line">DNS1=119.29.29.29</span><br></pre></td></tr></table></figure>
-<h3 id="设置DNS地址"><a href="#设置DNS地址" class="headerlink" title="设置DNS地址"></a>设置DNS地址</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/resolv.conf</span><br><span class="line">vim /etc/hosts  <span class="comment">#临时解析某个域名，非常有用</span></span><br><span class="line"></span><br><span class="line">mii-tool eth0  <span class="comment">#查看网卡连接状态</span></span><br><span class="line"></span><br><span class="line">ifconfig eth0 up <span class="comment">#启动网卡</span></span><br><span class="line">NetworkManager   <span class="comment">#重启网络服务</span></span><br><span class="line">systemctl restart network.service  <span class="comment">#重启网络服务</span></span><br><span class="line">service network restart  <span class="comment">#重启网络服务</span></span><br><span class="line"></span><br><span class="line">hostname <span class="comment">#更改主机名</span></span><br><span class="line">vim /etc/sysconfig/network <span class="comment">#永久更改主机名</span></span><br><span class="line">HOSTNAME=XXX</span><br></pre></td></tr></table></figure>
+            <h3 id="一、SAMBA基础"><a href="#一、SAMBA基础" class="headerlink" title="一、SAMBA基础"></a>一、SAMBA基础</h3><p>TCP 139端口、 445端口<br>UDP 137、138端口</p>
+<h3 id="二、服务器搭建"><a href="#二、服务器搭建" class="headerlink" title="二、服务器搭建"></a>二、服务器搭建</h3><p>1、安装SAMBA<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install samba -y</span><br></pre></td></tr></table></figure></p>
+<p>2、配置SAMBA</p>
+<p>备份SAMBA配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/samba/smb.conf .</span><br></pre></td></tr></table></figure></p>
+<p>过滤SAMBA配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat smb.conf |grep -v <span class="string">"#"</span>|grep -v <span class="string">";"</span>|grep -v <span class="string">"^$"</span>&gt;123</span><br></pre></td></tr></table></figure></p>
+<p>vim 123</p>
+<p>[global] 全局配置<br>        workgroup = workgroup 工作组<br>        server string = Samba Server Version %v 服务器描述<br>        security = user share domain server     认证方法 </p>
+<p>user     认证用户<br>share    匿名用户<br>domain   DC认证<br>server   独立服务器认证</p>
+<p>[mp3]   共享名<br>comment = beyond mp3  描述<br>path = /opt/share     路径<br>browseable = yes      网上邻居中是否可以查看共享名<br>guest ok = yes        是否允许所有人访问<br>writable = no         是否可写</p>
+<p>3、启动服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp 123 /etc/samba/smb.conf</span><br><span class="line"></span><br><span class="line">service smb start</span><br><span class="line">chkconfig smb on</span><br></pre></td></tr></table></figure></p>
+<p>4、认证用户访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">        workgroup = workgroup</span><br><span class="line">        server string = Samba Server Version %v</span><br><span class="line">        security = user</span><br><span class="line">[mp3]</span><br><span class="line">        comment = my mp3</span><br><span class="line">        path = /opt/share</span><br><span class="line">        browseable = yes</span><br><span class="line">        guest ok = no</span><br><span class="line">        writable = yes</span><br></pre></td></tr></table></figure></p>
+<p>SAMBA用户是基于本地用户，用smbpasswd把本地用户转化为SAMBA用户</p>
+<p>smbpasswd命令的主要选项：<br>-h：显示smbpasswd命令的帮助信息<br>-a：添加指定的Samba用户帐号<br>-d：禁用指定的用户帐号<br>-e：启用指定的用户帐号<br>-x：删除指定的用户帐号<br>不使用任何命令选项时可以用于修改Samba用户的密码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbpasswd -a wcg</span><br></pre></td></tr></table></figure></p>
+<p>写入SAMBA共享<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod o+w share/</span><br></pre></td></tr></table></figure></p>
+<p>5、SAMBA的访问控制</p>
+<p>a、基于用户的访控<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">security = user</span><br><span class="line">public = no</span><br><span class="line">valid users = wcg @root（组）</span><br></pre></td></tr></table></figure></p>
+<p>b、基于IP的访控</p>
+<p>一般用在全局配置[global]部分<br>hosts allow配置项：仅允许特定的客户机<br>hosts deny配置项：仅拒绝特定的客户机</p>
+<p>allow和deny不能同时存在</p>
+<p>客户机地址表示形式：</p>
+<p>以空格分隔多个地址</p>
+<p>主机名或IP地址，例如： 192.168.168.11 或者 prtsvr</p>
+<p>网络地址，例如：173.17. 或者 173.17.0.0/255.255.0.0</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">        workgroup = workgroup</span><br><span class="line">        server string = Samba Server Version %v</span><br><span class="line">        security = user</span><br><span class="line">        hosts allow = 192.168.100.200</span><br><span class="line">        <span class="comment">#hosts deny = 192.168.100.200</span></span><br></pre></td></tr></table></figure>
+<p>4、默认权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">directory mask = 0700</span><br><span class="line"></span><br><span class="line">create mask = 0600</span><br></pre></td></tr></table></figure>
+<p>5、LINUX访问WINDOWS共享</p>
+<p>查看共享：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -U wcg -L //192.168.100.200</span><br></pre></td></tr></table></figure></p>
+<p>访问共享：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">smbclient -U wcg  //192.168.100.200/mp4</span><br></pre></td></tr></table></figure></p>
+<p>自动挂载<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fstab </span><br><span class="line"></span><br><span class="line">//192.168.100.200/mp4   /mnt/winxp  cifs defaults,username=wcg 0 0</span><br></pre></td></tr></table></figure></p>
+
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/" data-id="cjk82044q0004hcj7rx8ev5p4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="https://itcuihao.github.io/2018/07/25/SAMBA共享文件配置/" data-id="cjk82044y000ahcj7d7wdywf0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -320,20 +344,20 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/07/17/Linux-yum源配置/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="/2018/07/25/以及php-fpm结合apache配置/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
-            Linux yum源配置
+            php-fpm结合apache配置
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
     </a>
     
     
-        <a href="/2018/07/17/new-article/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/07/18/Linux-日常管理/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">new article</p>
+        <p class="article-nav-title">Linux 日常管理</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -547,7 +571,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/';
+    var disqus_url = 'https://itcuihao.github.io/2018/07/25/SAMBA共享文件配置/';
     
     (function() {
     var dsq = document.createElement('script');

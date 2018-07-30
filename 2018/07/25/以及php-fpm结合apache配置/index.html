@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>php-fpm结合apache配置 | Leaonly&#39;s Blog</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Linux,apache" />
+    
+    <meta name="description" content="apache 安装配置 以及php-fpm结合apache配置Apache httpd 2.4.x 使用 mod_proxy_fcgi 和 PHP-FPM 的方式： http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/ 1234567891011121314151617181920212223242526272829303132333">
+<meta name="keywords" content="Linux,apache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php-fpm结合apache配置">
+<meta property="og:url" content="https://itcuihao.github.io/2018/07/25/以及php-fpm结合apache配置/index.html">
+<meta property="og:site_name" content="Leaonly&#39;s Blog">
+<meta property="og:description" content="apache 安装配置 以及php-fpm结合apache配置Apache httpd 2.4.x 使用 mod_proxy_fcgi 和 PHP-FPM 的方式： http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/ 1234567891011121314151617181920212223242526272829303132333">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://itcuihao.github.io/libs/cover-10.jpg">
+<meta property="og:updated_time" content="2018-07-30T08:54:15.248Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php-fpm结合apache配置">
+<meta name="twitter:description" content="apache 安装配置 以及php-fpm结合apache配置Apache httpd 2.4.x 使用 mod_proxy_fcgi 和 PHP-FPM 的方式： http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/ 1234567891011121314151617181920212223242526272829303132333">
+<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-10.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="Leaonly&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Linux/">Linux</a></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Linux/">Linux</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-以及php-fpm结合apache配置" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        php-fpm结合apache配置
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/07/25/以及php-fpm结合apache配置/" class="article-date">
+            <time datetime="2018-07-25T04:08:06.000Z" itemprop="datePublished">2018-07-25</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>, <a class="tag-link" href="/tags/apache/">apache</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>apache 安装配置 以及php-fpm结合apache配置<br>Apache httpd 2.4.x 使用 mod_proxy_fcgi 和 PHP-FPM 的方式： <a href="http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/" target="_blank" rel="noopener">http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#解决依赖关系</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">yum -y install pcre-devel</span><br><span class="line">下载apr  apr-util:http://apr.apache.org/download.cgi</span><br><span class="line"></span><br><span class="line"><span class="comment">#编译安装apr:</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ./configure --prefix=/usr/<span class="built_in">local</span>/apr</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment">#编译安装apr-util:</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/apr-util --with-apr=/usr/<span class="built_in">local</span>/apr </span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"><span class="comment">#编译apache2.4.2：</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@martin httpd-2.4.20]<span class="comment">#  ./configure --prefix=/usr/local/apache2.4.2 \</span></span><br><span class="line">--sysconfdir=/etc/httpd   \</span><br><span class="line">--<span class="built_in">enable</span>-so   \</span><br><span class="line">--<span class="built_in">enable</span>--ssl   \</span><br><span class="line">--<span class="built_in">enable</span>-cgi   \</span><br><span class="line">--<span class="built_in">enable</span>-rewrite   \</span><br><span class="line">--with-zlib  \</span><br><span class="line">--with-pcre  \</span><br><span class="line">--with-apr=/usr/<span class="built_in">local</span>/apr  \</span><br><span class="line">--with-apr-util=/usr/<span class="built_in">local</span>/apr-util  \</span><br><span class="line">--<span class="built_in">enable</span>-modeles=most  \</span><br><span class="line">--<span class="built_in">enable</span>-mpms-shared=all  \</span><br><span class="line">--with-mpm=event</span><br><span class="line"></span><br><span class="line"><span class="comment">#参数详解：</span></span><br><span class="line"></span><br><span class="line">--prefix：<span class="comment">#安装路径</span></span><br><span class="line">--sysconfdir：<span class="comment">#指定配置文件路径</span></span><br><span class="line">--<span class="built_in">enable</span>-so：<span class="comment">#DSO兼容，DSO=Dynamic Shared Object，动态共享对象，可实现模块动态生效</span></span><br><span class="line">--<span class="built_in">enable</span>-ssl：<span class="comment">#支持SSL/TLS，可实现https访问 需已安装openssl-devel</span></span><br><span class="line">--<span class="built_in">enable</span>-cgi：<span class="comment">#支持CGI脚本（默认对非线程的MPM模式开启）</span></span><br><span class="line">--<span class="built_in">enable</span>-rewrite：<span class="comment">#启用Rewrite功能，URL重写</span></span><br><span class="line">--<span class="built_in">enable</span>-deflate：<span class="comment">#支持压缩功能</span></span><br><span class="line">--with-zlib：<span class="comment">#使用指定的zlib库，不指定路径会自动寻找</span></span><br><span class="line">--with-pcre：<span class="comment">#使用指定的PCRE库，不指定路径会自动寻找 需已安装pcre-devel</span></span><br><span class="line">--with-apr：<span class="comment">#指定apr安装路径</span></span><br><span class="line">--with-apr-util：<span class="comment">#指定apr-util安装路径</span></span><br><span class="line">--<span class="built_in">enable</span>-mpms-shared：<span class="comment">#支持动态加载的MPM模块，可选参数：all</span></span><br><span class="line">--with-mpm：<span class="comment">#设置默认启用的MPM模式，&#123;prefork|worker|event&#125;</span></span><br><span class="line">--<span class="built_in">enable</span>-modules：<span class="comment">#支持动态启用的模块，可选参数：all，most，few，reallyall</span></span><br><span class="line"><span class="comment">#编译之前可使用./configure --help查看各项参数</span></span><br><span class="line"></span><br><span class="line">[root@martin <span class="built_in">local</span>]<span class="comment"># make &amp;&amp; make install</span></span><br><span class="line">[root@martin <span class="built_in">local</span>]<span class="comment"># cd /usr/local</span></span><br><span class="line">[root@martin <span class="built_in">local</span>]<span class="comment"># ln -sv apache2.4.2/ apache</span></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#导入环境变量：</span></span><br><span class="line"></span><br><span class="line">[root@martin <span class="built_in">local</span>]<span class="comment">#  vim /etc/profile.d/httpd.sh</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/apache/bin:<span class="variable">$PATH</span></span><br><span class="line">[root@martin <span class="built_in">local</span>]<span class="comment"># . /etc/profile.d/httpd.sh</span></span><br><span class="line"><span class="comment">#编译配置查看：</span></span><br><span class="line"></span><br><span class="line">[root@marvin ~]<span class="comment"># cat /usr/local/apache/build/config.nice</span></span><br><span class="line"><span class="comment">#启动文件：</span></span><br><span class="line"></span><br><span class="line">[root@martin httpd]<span class="comment"># vim /etc/rc.d/init.d/httpd</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># httpd        Startup script for the Apache HTTP Server</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># chkconfig: - 85 15</span></span><br><span class="line"><span class="comment"># description: The Apache HTTP Server is an efficient and extensible  \</span></span><br><span class="line"><span class="comment">#              server implementing the current HTTP standards.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#开机启动：</span></span><br><span class="line"></span><br><span class="line">chmod +x /etc/rc.d/init.d/httpd</span><br><span class="line">chkconfig --add httpd</span><br><span class="line">chkconfig httpd on</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#安装php5.6  fast-cgi模式：</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#依赖：</span></span><br><span class="line"></span><br><span class="line">yum install freetype-devel libpng-devel gd-devel libcurl-devel libjpeg-turbo-devel libxslt-devel zlib-devel libxml2-devel  libiconv-devel  bzip2-devel libmcrypt-devel  -y</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">php-configure－apache：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">./configure  --prefix=/usr/<span class="built_in">local</span>/phpfpm  \</span><br><span class="line">--with-config-file-path=/etc \</span><br><span class="line">--with-config-file-scan-dir=/etc/php.d \</span><br><span class="line"> --with-mysql=mysqlnd  \</span><br><span class="line">--with-pdo-mysql=mysqlnd  \</span><br><span class="line">--with-mysqli=mysqlnd  \</span><br><span class="line">--with-iconv-dir   \</span><br><span class="line">--with-freetype-dir   \</span><br><span class="line">--with-jpeg-dir  \</span><br><span class="line">--with-png-dir  \</span><br><span class="line">--with-zlib \</span><br><span class="line">--with-libxml-dir  \</span><br><span class="line">--<span class="built_in">enable</span>-xml  \</span><br><span class="line">--<span class="built_in">disable</span>-rpath  \</span><br><span class="line">--<span class="built_in">enable</span>-bcmath  \</span><br><span class="line">--<span class="built_in">enable</span>-shmop  \</span><br><span class="line">--<span class="built_in">enable</span>-sysvsem  \</span><br><span class="line">--<span class="built_in">enable</span>-inline-optimization  \</span><br><span class="line">--with-curl  \</span><br><span class="line">--<span class="built_in">enable</span>-mbregex  \</span><br><span class="line">--<span class="built_in">enable</span>-fpm  \</span><br><span class="line">--<span class="built_in">enable</span>-mbstring  \</span><br><span class="line">--with-mcrypt  \</span><br><span class="line">--with-gd  \</span><br><span class="line">--<span class="built_in">enable</span>-gd-native-ttf  \</span><br><span class="line">--with-openssl  \</span><br><span class="line">--with-mhash  \</span><br><span class="line">--<span class="built_in">enable</span>-pcntl  \</span><br><span class="line">--<span class="built_in">enable</span>-sockets  \</span><br><span class="line">--with-xmlrpc  \</span><br><span class="line">--<span class="built_in">enable</span>-zip  \</span><br><span class="line">--<span class="built_in">enable</span>-soap  \</span><br><span class="line">--<span class="built_in">enable</span>-short-tags   \</span><br><span class="line">--<span class="built_in">enable</span>-static  \</span><br><span class="line">--with-xsl  \</span><br><span class="line">--with-fpm-user=apache  \</span><br><span class="line">--with-fpm-group=apache  \</span><br><span class="line">--<span class="built_in">enable</span>-ftp</span><br><span class="line"></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment">#make &amp;&amp; make install</span></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment"># cp php.ini-development /etc/php.ini</span></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment"># cp sapi/fpm/init.d.php-fpm /etc/rc.d/init.d/php-fpm</span></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment"># chmod +x /etc/rc.d/init.d/php-fpm </span></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment"># chkconfig --add php-fpm</span></span><br><span class="line">[root@marvin php-5.6.19]<span class="comment"># chkconfig php-fpm on</span></span><br><span class="line"></span><br><span class="line">[root@marvin etc]<span class="comment"># cd  /usr/local/phpfpm/etc</span></span><br><span class="line">[root@marvin phpfpm]<span class="comment"># cp php-fpm.conf.default php-fpm.conf</span></span><br><span class="line">[root@marvin phpfpm]<span class="comment"># vim php-fpm.conf</span></span><br><span class="line">pm.max_children = 50</span><br><span class="line">pm.start_servers = 5</span><br><span class="line">pm.min_spare_servers = 2</span><br><span class="line">pm.max_spare_servers = 8</span><br><span class="line">pid = /usr/<span class="built_in">local</span>/phpfpm/var/run/php-fpm.pid</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#配置apache  </span></span><br><span class="line"></span><br><span class="line">[root@martin httpd]<span class="comment"># vim /etc/httpd/httpd.conf</span></span><br><span class="line">在Apache httpd 2.4以后已经专门有一个模块针对FastCGI的实现，此模块为mod_proxy_fcgi.so，它其实是作为mod_proxy.so模块的扩充，因此，这两个模块都要加载:</span><br><span class="line"></span><br><span class="line">LoadModule proxy_module modules/mod_proxy.so</span><br><span class="line">LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so</span><br><span class="line">添加对php页面的支持</span><br><span class="line"></span><br><span class="line">AddType application/x-httpd-php .php</span><br><span class="line">AddType application/x-httpd-php-source .phps</span><br><span class="line">开启url rewrite:</span><br><span class="line"></span><br><span class="line">LoadModule rewrite_module modules/mod_rewrite.so</span><br><span class="line">开启防止启动警告</span><br><span class="line"></span><br><span class="line">ServerName www.example.com:80</span><br><span class="line">开启虚拟主机：</span><br><span class="line"></span><br><span class="line">Include /etc/httpd/extra/httpd-vhosts.conf</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#虚拟主机:</span></span><br><span class="line"></span><br><span class="line">[root@martin httpd]<span class="comment"># vim /etc/httpd/extra/httpd-vhosts.conf</span></span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    DocumentRoot  <span class="string">"/www/web/forum"</span></span><br><span class="line">    ServerName www.forum.com</span><br><span class="line">  ProxyRequests Off</span><br><span class="line">  ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000/www/web/forum/<span class="variable">$1</span></span><br><span class="line">    &lt;Directory <span class="string">"/www/web/forum"</span>&gt;</span><br><span class="line">        Options none</span><br><span class="line">        AllowOverride none</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://itcuihao.github.io/2018/07/25/以及php-fpm结合apache配置/" data-id="cjk82044s0005hcj770mc81se" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ppoffice/hexo-theme-hueman" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/07/30/MySQL主从配置/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            MySQL主从配置
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2018/07/25/SAMBA共享文件配置/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">SAMBA共享文件配置</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/30/MySQL主从配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-14.jpg)" alt="MySQL主从配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/30/MySQL主从配置/" class="title">MySQL主从配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-30T08:51:21.000Z" itemprop="datePublished">2018-07-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/25/以及php-fpm结合apache配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-10.jpg)" alt="php-fpm结合apache配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/25/以及php-fpm结合apache配置/" class="title">php-fpm结合apache配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-25T04:08:06.000Z" itemprop="datePublished">2018-07-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/25/SAMBA共享文件配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-7.jpg)" alt="SAMBA共享文件配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/25/SAMBA共享文件配置/" class="title">SAMBA共享文件配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-25T03:23:15.000Z" itemprop="datePublished">2018-07-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/18/Linux-日常管理/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-4.png)" alt="Linux 日常管理" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/18/Linux-日常管理/" class="title">Linux 日常管理</a></p>
+                            <p class="item-date"><time datetime="2018-07-18T03:02:10.000Z" itemprop="datePublished">2018-07-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/17/Someting-Else/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-5.jpg)" alt="Someting-Else" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/07/17/Someting-Else/" class="title">Someting-Else</a></p>
+                            <p class="item-date"><time datetime="2018-07-17T09:51:37.000Z" itemprop="datePublished">2018-07-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IP/">IP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/共享/">共享</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/IP/" style="font-size: 10px;">IP</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/共享/" style="font-size: 10px;">共享</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2018 Leaon</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://itcuihao.github.io/2018/07/25/以及php-fpm结合apache配置/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

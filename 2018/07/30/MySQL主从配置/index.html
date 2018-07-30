@@ -6,26 +6,26 @@
     
 
     
-    <title>Linux 网络基础命令 | Leaonly&#39;s Blog</title>
+    <title>MySQL主从配置 | Leaonly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Linux,IP,DNS" />
+        <meta name="keywords" content="MySQL" />
     
-    <meta name="description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
-<meta name="keywords" content="Linux,IP,DNS">
+    <meta name="description" content="MySQL Replication主从配置1234567cd /usr/localcp -r mysql mysql_2cd mysql_2./scripts/mysql_install_db --user=mysql --datadir=/data/mysql2cp /etc/my.cnf ./my.cnfvim my.cnf #修改参数1234567log_bin = Leaon_Linux2">
+<meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 网络基础命令">
-<meta property="og:url" content="https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/index.html">
+<meta property="og:title" content="MySQL主从配置">
+<meta property="og:url" content="https://itcuihao.github.io/2018/07/30/MySQL主从配置/index.html">
 <meta property="og:site_name" content="Leaonly&#39;s Blog">
-<meta property="og:description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
+<meta property="og:description" content="MySQL Replication主从配置1234567cd /usr/localcp -r mysql mysql_2cd mysql_2./scripts/mysql_install_db --user=mysql --datadir=/data/mysql2cp /etc/my.cnf ./my.cnfvim my.cnf #修改参数1234567log_bin = Leaon_Linux2">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://itcuihao.github.io/libs/cover-3.png">
-<meta property="og:updated_time" content="2018-07-21T02:43:01.027Z">
+<meta property="og:image" content="https://itcuihao.github.io/libs/cover-14.jpg">
+<meta property="og:updated_time" content="2018-07-30T09:03:30.167Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux 网络基础命令">
-<meta name="twitter:description" content="自动获取IP1dhclient 查看IP1ip addr 查看网路配置1ifconfig 重启一下网络网卡 服务1service network restart 手动配置IP1234567vi /etc/sysconfig/network-scripts/ifcfg-eth0ONBOOT=yesBOOTPROTO=staticIPADDR=172.17.8.250NETMASK=255.255.">
-<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-3.png">
+<meta name="twitter:title" content="MySQL主从配置">
+<meta name="twitter:description" content="MySQL Replication主从配置1234567cd /usr/localcp -r mysql mysql_2cd mysql_2./scripts/mysql_install_db --user=mysql --datadir=/data/mysql2cp /etc/my.cnf ./my.cnfvim my.cnf #修改参数1234567log_bin = Leaon_Linux2">
+<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-14.jpg">
     
 
     
@@ -138,14 +138,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Linux-网络基础命令" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-MySQL主从配置" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Linux 网络基础命令
+        MySQL主从配置
         </h1>
     
 
@@ -155,35 +155,46 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/07/17/Linux-网络基础命令/" class="article-date">
-            <time datetime="2018-07-17T08:41:50.000Z" itemprop="datePublished">2018-07-17</time>
+        <a href="/2018/07/30/MySQL主从配置/" class="article-date">
+            <time datetime="2018-07-30T08:51:21.000Z" itemprop="datePublished">2018-07-30</time>
         </a>
     </div>
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/DNS/">DNS</a>, <a class="tag-link" href="/tags/IP/">IP</a>, <a class="tag-link" href="/tags/Linux/">Linux</a>
+        <a class="tag-link" href="/tags/MySQL/">MySQL</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <hr>
-<h3 id="自动获取IP"><a href="#自动获取IP" class="headerlink" title="自动获取IP"></a>自动获取IP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dhclient</span><br></pre></td></tr></table></figure>
-<h3 id="查看IP"><a href="#查看IP" class="headerlink" title="查看IP"></a>查看IP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr</span><br></pre></td></tr></table></figure>
-<h3 id="查看网路配置"><a href="#查看网路配置" class="headerlink" title="查看网路配置"></a>查看网路配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
-<h3 id="重启一下网络网卡-服务"><a href="#重启一下网络网卡-服务" class="headerlink" title="重启一下网络网卡 服务"></a>重启一下网络网卡 服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network restart</span><br></pre></td></tr></table></figure>
-<h3 id="手动配置IP"><a href="#手动配置IP" class="headerlink" title="手动配置IP"></a>手动配置IP</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">ONBOOT=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">IPADDR=172.17.8.250</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">GATEWAY=172.17.8.1</span><br><span class="line">DNS1=119.29.29.29</span><br></pre></td></tr></table></figure>
-<h3 id="设置DNS地址"><a href="#设置DNS地址" class="headerlink" title="设置DNS地址"></a>设置DNS地址</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/resolv.conf</span><br><span class="line">vim /etc/hosts  <span class="comment">#临时解析某个域名，非常有用</span></span><br><span class="line"></span><br><span class="line">mii-tool eth0  <span class="comment">#查看网卡连接状态</span></span><br><span class="line"></span><br><span class="line">ifconfig eth0 up <span class="comment">#启动网卡</span></span><br><span class="line">NetworkManager   <span class="comment">#重启网络服务</span></span><br><span class="line">systemctl restart network.service  <span class="comment">#重启网络服务</span></span><br><span class="line">service network restart  <span class="comment">#重启网络服务</span></span><br><span class="line"></span><br><span class="line">hostname <span class="comment">#更改主机名</span></span><br><span class="line">vim /etc/sysconfig/network <span class="comment">#永久更改主机名</span></span><br><span class="line">HOSTNAME=XXX</span><br></pre></td></tr></table></figure>
+            <h2 id="MySQL-Replication主从配置"><a href="#MySQL-Replication主从配置" class="headerlink" title="MySQL Replication主从配置"></a>MySQL Replication主从配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span></span><br><span class="line">cp -r mysql mysql_2</span><br><span class="line"><span class="built_in">cd</span> mysql_2</span><br><span class="line">./scripts/mysql_install_db --user=mysql --datadir=/data/mysql2</span><br><span class="line"></span><br><span class="line">cp /etc/my.cnf ./my.cnf</span><br><span class="line">vim my.cnf</span><br></pre></td></tr></table></figure>
+<p>#修改参数<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">log_bin = Leaon_Linux2</span><br><span class="line"><span class="comment">#These are commonly set, remove the # and set as required.</span></span><br><span class="line">basedir = /usr/<span class="built_in">local</span>/mysql_2</span><br><span class="line">datadir = /data/mysql2</span><br><span class="line">port = 3307</span><br><span class="line">server_id = 129</span><br><span class="line">socket = /tmp/mysql2.sock</span><br></pre></td></tr></table></figure></p>
+<p>#保存配置文件后，复制启动脚本并编辑<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cp support-files/mysql.server /etc/init.d/mysqld2</span><br><span class="line">vim /etc/init.d/mysqld2</span><br><span class="line"></span><br><span class="line">basedir=/usr/<span class="built_in">local</span>/mysql_2</span><br><span class="line">datadir=/data/mysql2</span><br><span class="line"><span class="variable">$bindir</span>/mysqld_safe --defaults-file=<span class="variable">$basedir</span>/my.cnf --datadir=<span class="string">"<span class="variable">$datadir</span>"</span> --pid-file=<span class="string">"<span class="variable">$mysqld_pid_file_path</span>"</span> <span class="variable">$other_args</span> &gt;/dev/null &amp;</span><br><span class="line"></span><br><span class="line">  <span class="comment">#Try to find basedir in /etc/my.cnf</span></span><br><span class="line">  conf=/usr/<span class="built_in">local</span>/mysql_2/my.cnf</span><br></pre></td></tr></table></figure></p>
+<p>#启动实例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/mysqld start</span><br><span class="line">/etc/init.d/mysqld2 start</span><br></pre></td></tr></table></figure></p>
+<p>#检查服务<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -lnp |grep sqld</span><br></pre></td></tr></table></figure></p>
+<h2 id="设置主（master）配置"><a href="#设置主（master）配置" class="headerlink" title="设置主（master）配置"></a>设置主（master）配置</h2><p>#master端创建表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -S /tmp/mysql2.sock</span><br><span class="line">create database aming;</span><br><span class="line">quit</span><br></pre></td></tr></table></figure></p>
+<p>#导入mysql库数据到aming库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -uroot -S /tmp/mysql2.sock mysql &gt; /tmp/aming.sql</span><br><span class="line">mysql -uroot -S /tmp/mysql2.sock aming &lt; /tmp/aming.sql</span><br></pre></td></tr></table></figure></p>
+<p>#可选参数=========================<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/<span class="built_in">local</span>/mysql_2/my.cnf</span><br><span class="line"></span><br><span class="line"><span class="comment">#定义需要复制的数据库（引起报错，待确认）</span></span><br><span class="line">binglog-do-db=databasename1,databasename2</span><br><span class="line"></span><br><span class="line"><span class="comment">#定义不需要复制的数据库</span></span><br><span class="line">binlog-ignore-db=databasename1,databasename2</span><br><span class="line">Binlog_Do_DB</span><br><span class="line">Binlog_Ignore_DB</span><br></pre></td></tr></table></figure></p>
+<p>#设置密码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin -uroot -S /tmp/mysql2.sock password <span class="string">'123456'</span></span><br><span class="line">mysql -uroot -S /tmp/mysql2.sock -p</span><br></pre></td></tr></table></figure></p>
+<p>#为从（slave）端设置用户IP密码权限<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grant replication slave on *.* to <span class="string">'repl'</span>@<span class="string">'127.0.0.1'</span> identified by <span class="string">'123lallala'</span>；</span><br></pre></td></tr></table></figure></p>
+<p>#锁表&amp;查看master状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flush tables with <span class="built_in">read</span> lock;</span><br><span class="line">show master status;</span><br></pre></td></tr></table></figure></p>
+<h2 id="设置从（slave）"><a href="#设置从（slave）" class="headerlink" title="设置从（slave）"></a>设置从（slave）</h2><p>#可选参数=========================<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/my.cnf</span><br><span class="line">replicate-do-db=databasename1,databasename2</span><br><span class="line">replicate-ignore-db=databasename1,databasename2</span><br></pre></td></tr></table></figure></p>
+<p>#导入master段库数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -uroot -S /tmp/mysql2.sock -p<span class="string">'123456'</span> aming &gt; /tmp/aming1.sql</span><br><span class="line">mysql -uroot -S /tmp/mysql.sock -p123456 -e <span class="string">"create database aming"</span></span><br><span class="line">mysql -uroot -S /tmp/mysql.sock -p123456 aming &lt; /tmp/aming1.sql</span><br></pre></td></tr></table></figure></p>
+<p>#设置slave段参数<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -S /tmp/mysql.sock -p123456</span><br><span class="line">stop slave;</span><br><span class="line"></span><br><span class="line">mysql&gt; change master to master_host=<span class="string">'127.0.0.1'</span>,</span><br><span class="line">    -&gt; master_port=3307, master_user=<span class="string">'repl'</span>,</span><br><span class="line">    -&gt; master_password=<span class="string">'123lalala'</span>,</span><br><span class="line">    -&gt; master_log_file=<span class="string">'Leaon_Linux2.000003'</span>,</span><br><span class="line">    -&gt; master_log_pos=468;</span><br><span class="line">mysql&gt; start slave;</span><br></pre></td></tr></table></figure></p>
+<p>#查看slave的状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">show slave status\G;</span><br><span class="line"></span><br><span class="line">             Slave_IO_Running: Yes</span><br><span class="line">            Slave_SQL_Running: Yes</span><br><span class="line">        Seconds_Behind_Master: 0</span><br><span class="line">Master_SSL_Verify_Server_Cert: No</span><br><span class="line">                Last_IO_Errno: 0</span><br><span class="line">                Last_IO_Error: </span><br><span class="line">               Last_SQL_Errno: 0</span><br></pre></td></tr></table></figure></p>
+<h2 id="测试主从"><a href="#测试主从" class="headerlink" title="测试主从"></a>测试主从</h2><p>#主<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -S /tmp/mysql2.sock -p<span class="string">'123456'</span> aming</span><br><span class="line">select count(*) from db;</span><br><span class="line">truncate table db;</span><br><span class="line">select count(*) from db;</span><br><span class="line">drop table db;</span><br></pre></td></tr></table></figure></p>
+<p>#从<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -S /tmp/mysql.sock -p<span class="string">'123456'</span> aming</span><br><span class="line">select count(*) from db;</span><br><span class="line">select count(*) from db;</span><br></pre></td></tr></table></figure></p>
+
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/" data-id="cjk82044q0004hcj7rx8ev5p4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="https://itcuihao.github.io/2018/07/30/MySQL主从配置/" data-id="cjk82044m0001hcj70i6uvfi1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -320,20 +331,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/07/17/Linux-yum源配置/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Linux yum源配置
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2018/07/17/new-article/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/07/25/以及php-fpm结合apache配置/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">new article</p>
+        <p class="article-nav-title">php-fpm结合apache配置</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -547,7 +548,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'https://itcuihao.github.io/2018/07/17/Linux-网络基础命令/';
+    var disqus_url = 'https://itcuihao.github.io/2018/07/30/MySQL主从配置/';
     
     (function() {
     var dsq = document.createElement('script');
