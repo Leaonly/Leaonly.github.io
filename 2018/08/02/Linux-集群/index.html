@@ -6,20 +6,26 @@
     
 
     
-    <title>标签：: apache | Leaonly&#39;s Blog</title>
+    <title>Linux 集群 | Leaonly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="description" content="一个用来blablabla的网站">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Leaonly&#39;s Blog">
-<meta property="og:url" content="https://itcuihao.github.io/tags/apache/index.html">
+        <meta name="keywords" content="Linux" />
+    
+    <meta name="description" content="vim /etc/keepalived/keepalived.confvim /usr/local/sbin/check_ng.shtail -f /var/log/messages #安装keepalivedyum install -y keepalived #master配置vim /etc/keepalived/keepalived.conf global_defs {   notifica">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 集群">
+<meta property="og:url" content="https://itcuihao.github.io/2018/08/02/Linux-集群/index.html">
 <meta property="og:site_name" content="Leaonly&#39;s Blog">
-<meta property="og:description" content="一个用来blablabla的网站">
+<meta property="og:description" content="vim /etc/keepalived/keepalived.confvim /usr/local/sbin/check_ng.shtail -f /var/log/messages #安装keepalivedyum install -y keepalived #master配置vim /etc/keepalived/keepalived.conf global_defs {   notifica">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://itcuihao.github.io/libs/cover-9.jpg">
+<meta property="og:updated_time" content="2018-08-02T09:58:58.421Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Leaonly&#39;s Blog">
-<meta name="twitter:description" content="一个用来blablabla的网站">
+<meta name="twitter:title" content="Linux 集群">
+<meta name="twitter:description" content="vim /etc/keepalived/keepalived.confvim /usr/local/sbin/check_ng.shtail -f /var/log/messages #安装keepalivedyum install -y keepalived #master配置vim /etc/keepalived/keepalived.conf global_defs {   notifica">
+<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-9.jpg">
     
 
     
@@ -128,74 +134,147 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-tag"></i>标签：: <em>apache</em>
+    <a class="page-title-link" href="/categories/Linux/">Linux</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-Linux-集群" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/07/25/以及php-fpm结合apache配置/" class="thumbnail">
-    
-    
-        <span style="background-image:url(/libs/cover-10.jpg)" alt="php-fpm结合apache配置" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span class="disqus-comment-count" data-disqus-identifier="" data-disqus-url="https://itcuihao.github.io/2018/07/25/以及php-fpm结合apache配置/">0</span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Linux/">Linux</a>
-            </div>
-            <div class="date"><time datetime="2018-07-25T04:08:06.000Z" itemprop="datePublished">2018-07-25</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2018/07/25/以及php-fpm结合apache配置/">php-fpm结合apache配置</a>
+        Linux 集群
         </h1>
     
 
-        <p class="article-excerpt">
-            apache 安装配置 以及php-fpm结合apache配置Apache httpd 2.4.x 使用 mod_proxy_fcgi 和 PHP-FPM 的方式： http://cnzhx.net/blog/apache-httpd-mod_proxy_fcgi-php-fpm/
-1234567891011121314151617181920212223242526272829303132333
-        </p>
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/02/Linux-集群/" class="article-date">
+            <time datetime="2018-08-02T09:53:02.000Z" itemprop="datePublished">2018-08-02</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>vim /etc/keepalived/keepalived.conf<br>vim /usr/local/sbin/check_ng.sh<br>tail -f /var/log/messages</p>
+<p>#安装keepalived<br>yum install -y keepalived</p>
+<p>#master配置<br>vim /etc/keepalived/keepalived.conf</p>
+<p>global_defs {<br>   notification_email {<br>        zabbix@zabbix-server<br>   }<br>   notification_email_from root@zabbix-server<br>   smtp_server 127.0.0.1<br>   smtp_connect_timeout 30<br>   router_id LVS_DEVEL<br>   vrrp_skip_check_adv_addr<br>   vrrp_strict<br>   vrrp_garp_interval 0<br>   vrrp_gna_interval 0<br>}</p>
+<p>vrrp_script chk_nginx {<br>        script “/usr/local/sbin/check_ng.sh”<br>        interval 3<br>}</p>
+<p>vrrp_instance VI_1 {<br>    state MASTER<br>    interface ens33<br>    virtual_router_id 51<br>    priority 100<br>    advert_int 1<br>    authentication {<br>        auth_type PASS<br>        auth_pass 123456<br>    }<br>    virtual_ipaddress {<br>        192.168.200.16<br>        192.168.200.17<br>        192.168.200.18<br>    }<br>    track script {<br>        chk_nginx<br>    }<br>}</p>
+<p>#监控nginx服务脚本——————<br>vim /usr/local/sbin/check_ng.sh</p>
+<p>#时间变量，用于记录 日志<br>d=<code>date --date today +%Y%m%d_%H:%M:%S</code></p>
+<p>#计算nginx进程数量<br>n=<code>ps -C nginx --no-heading|wc -l</code></p>
+<p>#如果进程为0，则启动nginx,并且两次检测nginx进程数量，</p>
+<p>#如果还为0，说明nginx无法启动，此时需要关闭keepalived<br>if [ $n -eq “0” ]; then<br>        /etc/init.d/nginx start<br>        n2=<code>ps -C nginx --no-heading|wc -l</code><br>        if [ $n2 -eq “0” ]; then<br>                echo “$d nginx down,keepalived will stop” &gt;&gt; /var/log/check_ng.log<br>                systemctl stop keepalived<br>        fi<br>fi</p>
+<p>chmod a+x /usr/local/sbin/check_ng.sh  #加权限————</p>
+<p>systemctl start keepalived<br>ip add   #可以看到配置的IP</p>
+<p>##配置backup</p>
+<p>#跟master大体相同，除了以下两项<br>    state BACKUP<br>    priority 90</p>
+<p>#编辑监控脚本</p>
+<p>vim /usr/local/sbin/check_ng.sh</p>
+<p>d=<code>date --date today +%Y%m%d_%H:%M:%S</code><br>n=<code>ps -C nginx --no-heading|wc -l</code></p>
+<p>#如果进程为0，则启动nginx,并且两次检测nginx进程数量，</p>
+<p>#如果还为0，说明nginx无法启动，此时需要关闭keepalived<br>if [ $n -eq “0” ]; then<br>        systemctl start nginx    //此处有差异<br>        n2=<code>ps -C nginx --no-heading|wc -l</code><br>        if [ $n2 -eq “0” ]; then<br>                echo “$d nginx down,keepalived will stop” &gt;&gt; /var/log/check_ng.log<br>                systemctl stop keepalived<br>        fi<br>fi</p>
+<p>chmod a+x /usr/local/sbin/check_ng.sh  #加权限</p>
+<p>systemctl start keepalived  #启动服务</p>
+<p>#配置keepalived ping不通 解决办法<br>vim /etc/keepalived/keepalived.conf</p>
+<p>把这个注释就可以了</p>
+<p>vrrp_strict</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://itcuihao.github.io/2018/08/02/Linux-集群/" data-id="cjkew9ha40005nkj7f9j49fmc" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
+
+    <section id="comments">
     
-        </div>
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
     
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -256,6 +335,29 @@
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/08/04/LVS负载均衡/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            LVS负载均衡
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2018/07/30/MySQL主从配置/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">MySQL主从配置</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -464,11 +566,13 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'https://itcuihao.github.io/2018/08/02/Linux-集群/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>

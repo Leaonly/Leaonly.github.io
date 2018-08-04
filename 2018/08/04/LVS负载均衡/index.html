@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    
+
+    
+    <title>LVS负载均衡 | Leaonly&#39;s Blog</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="Linux,LVS,keepalived" />
+    
+    <meta name="description" content="实践LVS的NAT模式1、实验环境 三台服务器，一台作为 director，两台作为 real server，director 有一个外网网卡(172.16.254.200) 和一个内网ip(192.168.0.8)，两个 real server 上只有内网 ip (192.168.0.18) 和 (192.168.0.28)，并且需要把两个 real server 的内网网关设置为 direct">
+<meta name="keywords" content="Linux,LVS,keepalived">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVS负载均衡">
+<meta property="og:url" content="https://itcuihao.github.io/2018/08/04/LVS负载均衡/index.html">
+<meta property="og:site_name" content="Leaonly&#39;s Blog">
+<meta property="og:description" content="实践LVS的NAT模式1、实验环境 三台服务器，一台作为 director，两台作为 real server，director 有一个外网网卡(172.16.254.200) 和一个内网ip(192.168.0.8)，两个 real server 上只有内网 ip (192.168.0.18) 和 (192.168.0.28)，并且需要把两个 real server 的内网网关设置为 direct">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://itcuihao.github.io/libs/cover-11.jpg">
+<meta property="og:updated_time" content="2018-08-04T04:03:15.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LVS负载均衡">
+<meta name="twitter:description" content="实践LVS的NAT模式1、实验环境 三台服务器，一台作为 director，两台作为 real server，director 有一个外网网卡(172.16.254.200) 和一个内网ip(192.168.0.8)，两个 real server 上只有内网 ip (192.168.0.18) 和 (192.168.0.28)，并且需要把两个 real server 的内网网关设置为 direct">
+<meta name="twitter:image" content="https://itcuihao.github.io/libs/cover-11.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="Leaonly&#39;s Blog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Linux/">Linux</a></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Linux/">Linux</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-LVS负载均衡" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        LVS负载均衡
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2018/08/04/LVS负载均衡/" class="article-date">
+            <time datetime="2018-08-04T03:57:42.000Z" itemprop="datePublished">2018-08-04</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/LVS/">LVS</a>, <a class="tag-link" href="/tags/Linux/">Linux</a>, <a class="tag-link" href="/tags/keepalived/">keepalived</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="实践LVS的NAT模式"><a href="#实践LVS的NAT模式" class="headerlink" title="实践LVS的NAT模式"></a>实践LVS的NAT模式</h2><p>1、实验环境</p>
+<p>三台服务器，一台作为 director，两台作为 real server，director 有一个外网网卡(172.16.254.200) 和一个内网ip(192.168.0.8)，两个 real server 上只有内网 ip (192.168.0.18) 和 (192.168.0.28)，并且需要把两个 real server 的内网网关设置为 director 的内网 ip(192.168.0.8)</p>
+<p>2、安装和配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">两个 real server 上都安装 nginx 服务</span><br><span class="line"><span class="comment"># yum install -y nginx</span></span><br><span class="line"></span><br><span class="line">Director 上安装 ipvsadm</span><br><span class="line"><span class="comment"># yum install -y ipvsadm</span></span><br><span class="line">Director 上编辑 nat 实现脚本</span><br><span class="line"></span><br><span class="line">复制代码</span><br><span class="line"><span class="comment"># vim /usr/local/sbin/lvs_nat.sh</span></span><br><span class="line"><span class="comment"># 编辑写入如下内容：</span></span><br><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="comment"># director服务器上开启路由转发功能:</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br><span class="line"><span class="comment"># 关闭 icmp 的重定向</span></span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/net/ipv4/conf/all/send_redirects</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/net/ipv4/conf/default/send_redirects</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/net/ipv4/conf/eth0/send_redirects</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/net/ipv4/conf/eth1/send_redirects</span><br><span class="line"><span class="comment"># director设置 nat 防火墙</span></span><br><span class="line">iptables -t nat -F</span><br><span class="line">iptables -t nat -X</span><br><span class="line">iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -j MASQUERADE</span><br><span class="line"><span class="comment"># director设置 ipvsadm</span></span><br><span class="line">IPVSADM=<span class="string">'/sbin/ipvsadm'</span></span><br><span class="line"><span class="variable">$IPVSADM</span> -C</span><br><span class="line"><span class="variable">$IPVSADM</span> -A -t 172.16.254.200:80 -s wrr</span><br><span class="line"><span class="variable">$IPVSADM</span> -a -t 172.16.254.200:80 -r 192.168.0.18:80 -m -w 1</span><br><span class="line"><span class="variable">$IPVSADM</span> -a -t 172.16.254.200:80 -r 192.168.0.28:80 -m -w 1</span><br><span class="line">复制代码</span><br><span class="line">保存后，在 Director 上直接运行这个脚本就可以完成 lvs/nat 的配置</span><br><span class="line"></span><br><span class="line">/bin/bash /usr/<span class="built_in">local</span>/sbin/lvs_nat.sh</span><br><span class="line">查看ipvsadm设置的规则</span><br><span class="line"></span><br><span class="line">ipvsadm -ln</span><br><span class="line">3、测试LVS的效果</span><br><span class="line"></span><br><span class="line">通过浏览器测试2台机器上的web内容 http://172.16.254.200 。为了区分开，我们可以把 nginx 的默认页修改一下：</span><br><span class="line"></span><br><span class="line">在 RS1 上执行</span><br><span class="line"><span class="comment"># echo "rs1rs1" &gt;/usr/share/nginx/html/index.html</span></span><br><span class="line"></span><br><span class="line">在 RS2 上执行</span><br><span class="line"><span class="comment"># echo "rs2rs2" &gt;/usr/share/nginx/html/index.html</span></span><br><span class="line">注意，切记一定要在两台 RS 上设置网关的 IP 为 director 的内网 IP。</span><br></pre></td></tr></table></figure></p>
+<h2 id="实践LVS的DR模式"><a href="#实践LVS的DR模式" class="headerlink" title="实践LVS的DR模式"></a>实践LVS的DR模式</h2><p>1、实验环境</p>
+<p>三台机器：</p>
+<p>Director节点：  (eth0 192.168.0.8  vip eth0:0 192.168.0.38)<br>Real server1： (eth0 192.168.0.18 vip lo:0 192.168.0.38)<br>Real server2： (eth0 192.168.0.28 vip lo:0 192.168.0.38)</p>
+<p>2、安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">两个 real server 上都安装 nginx 服务</span><br><span class="line"><span class="comment"># yum install -y nginx</span></span><br><span class="line"></span><br><span class="line">Director 上安装 ipvsadm</span><br><span class="line"><span class="comment"># yum install -y ipvsadm</span></span><br><span class="line">3、Director 上配置脚本</span><br><span class="line"></span><br><span class="line">复制代码</span><br><span class="line"><span class="comment"># vim /usr/local/sbin/lvs_dr.sh</span></span><br><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /proc/sys/net/ipv4/ip_forward</span><br><span class="line">ipv=/sbin/ipvsadm</span><br><span class="line">vip=192.168.147.144</span><br><span class="line">rs1=172.17.8.251</span><br><span class="line">rs2=172.17.8.252</span><br><span class="line">ifconfig eth0:0 down</span><br><span class="line">ifconfig eth0:0 <span class="variable">$vip</span> broadcast <span class="variable">$vip</span> netmask 255.255.255.255 up</span><br><span class="line">route add -host <span class="variable">$vip</span> dev eth0:0</span><br><span class="line"><span class="variable">$ipv</span> -C</span><br><span class="line"><span class="variable">$ipv</span> -A -t <span class="variable">$vip</span>:80 -s wrr </span><br><span class="line"><span class="variable">$ipv</span> -a -t <span class="variable">$vip</span>:80 -r <span class="variable">$rs1</span>:80 -g -w 3</span><br><span class="line"><span class="variable">$ipv</span> -a -t <span class="variable">$vip</span>:80 -r <span class="variable">$rs2</span>:80 -g -w 1</span><br><span class="line">复制代码</span><br><span class="line">执行脚本：</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash /usr/local/sbin/lvs_dr.sh</span></span><br><span class="line">4、在2台 rs 上配置脚本：</span><br><span class="line"></span><br><span class="line">复制代码</span><br><span class="line"><span class="comment"># vim /usr/local/sbin/lvs_dr_rs.sh</span></span><br><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line">vip=192.168.0.38</span><br><span class="line">ifconfig lo:0 <span class="variable">$vip</span> broadcast <span class="variable">$vip</span> netmask 255.255.255.255 up</span><br><span class="line">route add -host <span class="variable">$vip</span> lo:0</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1"</span> &gt;/proc/sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"2"</span> &gt;/proc/sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1"</span> &gt;/proc/sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"2"</span> &gt;/proc/sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">复制代码</span><br><span class="line">rs 上分别执行脚本：</span><br><span class="line"></span><br><span class="line">bash /usr/<span class="built_in">local</span>/sbin/lvs_dr_rs.sh</span><br><span class="line">5、实验测试</span><br><span class="line"></span><br><span class="line">测试方式同上，浏览器访问 http://192.168.0.38</span><br><span class="line"></span><br><span class="line">注意：在 DR 模式下，2台 rs 节点的 gateway 不需要设置成 dir 节点的 IP 。</span><br><span class="line"></span><br><span class="line">参考链接地址：http://www.cnblogs.com/lgfeng/archive/2012/10/16/2726308.html</span><br></pre></td></tr></table></figure></p>
+<h2 id="LVS结合keepalived"><a href="#LVS结合keepalived" class="headerlink" title="LVS结合keepalived"></a>LVS结合keepalived</h2><p>LVS可以实现负载均衡，但是不能够进行健康检查，比如一个rs出现故障，LVS 仍然会把请求转发给故障的rs服务器，这样就会导致请求的无效性。keepalive 软件可以进行健康检查，而且能同时实现 LVS 的高可用性，解决 LVS 单点故障的问题，其实 keepalive 就是为 LVS 而生的。</p>
+<p>1、实验环境</p>
+<p>4台节点</p>
+<p>Keepalived1 + lvs1(Director1)：192.168.0.48<br>Keepalived2 + lvs2(Director2)：192.168.0.58<br>Real server1：192.168.0.18<br>Real server2：192.168.0.28<br>IP: 192.168.0.38</p>
+<p>2、安装系统软件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">Lvs + keepalived的2个节点安装</span><br><span class="line"></span><br><span class="line"><span class="comment"># yum install ipvsadm keepalived -y</span></span><br><span class="line">Real server + nginx服务的2个节点安装</span><br><span class="line"></span><br><span class="line"><span class="comment"># yum install epel-release -y</span></span><br><span class="line"><span class="comment"># yum install nginx -y</span></span><br><span class="line">3、设置配置脚本</span><br><span class="line"></span><br><span class="line">Real server节点2台配置脚本：</span><br><span class="line"></span><br><span class="line">复制代码</span><br><span class="line"><span class="comment"># vim /usr/local/sbin/lvs_dr_rs.sh</span></span><br><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line">vip=192.168.0.38</span><br><span class="line">ifconfig lo:0 <span class="variable">$vip</span> broadcast <span class="variable">$vip</span> netmask 255.255.255.255 up</span><br><span class="line">route add -host <span class="variable">$vip</span> lo:0</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1"</span> &gt;/proc/sys/net/ipv4/conf/lo/arp_ignore</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"2"</span> &gt;/proc/sys/net/ipv4/conf/lo/arp_announce</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1"</span> &gt;/proc/sys/net/ipv4/conf/all/arp_ignore</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"2"</span> &gt;/proc/sys/net/ipv4/conf/all/arp_announce</span><br><span class="line"></span><br><span class="line">2节点rs 上分别执行脚本：</span><br><span class="line">bash /usr/<span class="built_in">local</span>/sbin/lvs_dr_rs.sh</span><br><span class="line">复制代码</span><br><span class="line">keepalived节点配置(2节点)：</span><br><span class="line"></span><br><span class="line">复制代码</span><br><span class="line">主节点( MASTER )配置文件</span><br><span class="line">vim /etc/keepalived/keepalived.conf</span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.0.38</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">virtual_server 192.168.0.38 80 &#123;</span><br><span class="line">    delay_loop 6</span><br><span class="line">    lb_algo rr</span><br><span class="line">    lb_kind DR</span><br><span class="line">    persistence_timeout 0</span><br><span class="line">    protocol TCP</span><br><span class="line"></span><br><span class="line">    real_server 192.168.0.18 80 &#123;</span><br><span class="line">        weight 1</span><br><span class="line">        TCP_CHECK &#123;</span><br><span class="line">            connect_timeout 10</span><br><span class="line">            nb_get_retry 3</span><br><span class="line">            delay_before_retry 3</span><br><span class="line">            connect_port 80</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    real_server 192.168.0.28 80 &#123;</span><br><span class="line">        weight 1</span><br><span class="line">        TCP_CHECK &#123;</span><br><span class="line">            connect_timeout 10</span><br><span class="line">            nb_get_retry 3</span><br><span class="line">            delay_before_retry 3</span><br><span class="line">            connect_port 80</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br><span class="line">从节点( BACKUP )配置文件</span><br><span class="line"></span><br><span class="line">拷贝主节点的配置文件keepalived.conf，然后修改如下内容：</span><br><span class="line"></span><br><span class="line">state MASTER -&gt; state BACKUP</span><br><span class="line">priority 100 -&gt; priority 90</span><br><span class="line">keepalived的2个节点执行如下命令，开启转发功能：</span><br><span class="line"></span><br><span class="line"><span class="comment"># echo 1 &gt; /proc/sys/net/ipv4/ip_forward</span></span><br><span class="line">4、启动keepalive</span><br><span class="line"></span><br><span class="line">先主后从分别启动keepalive</span><br><span class="line">service keepalived start</span><br></pre></td></tr></table></figure></p>
+<p>5、验证结果</p>
+<p>实验1</p>
+<p>手动关闭192.168.0.18节点的nginx，service nginx stop 在客户端上去测试访问 <a href="http://192.168.0.38" target="_blank" rel="noopener">http://192.168.0.38</a> 结果正常，不会出现访问18节点，一直访问的是28节点的内容。</p>
+<p>实验2</p>
+<p>手动重新开启 192.168.0.18 节点的nginx， service nginx start 在客户端上去测试访问 <a href="http://192.168.0.38" target="_blank" rel="noopener">http://192.168.0.38</a> 结果正常，按照 rr 调度算法访问18节点和28节点。</p>
+<p>实验3</p>
+<p>测试 keepalived 的HA特性，首先在master上执行命令 ip addr ，可以看到38的vip在master节点上的；这时如果在master上执行 service keepalived stop 命令，这时vip已经不再master上，在slave节点上执行 ip addr 命令可以看到 vip 已经正确漂到slave节点，这时客户端去访问 <a href="http://192.168.0.38" target="_blank" rel="noopener">http://192.168.0.38</a> 访问依然正常，验证了 keepalived的HA特性。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="https://itcuihao.github.io/2018/08/04/LVS负载均衡/" data-id="cjkew9h9t0000nkj74sds965v" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/ppoffice/hexo-theme-hueman" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/08/02/Linux-集群/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Linux 集群</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/04/LVS负载均衡/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-11.jpg)" alt="LVS负载均衡" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/08/04/LVS负载均衡/" class="title">LVS负载均衡</a></p>
+                            <p class="item-date"><time datetime="2018-08-04T03:57:42.000Z" itemprop="datePublished">2018-08-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/08/02/Linux-集群/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-9.jpg)" alt="Linux 集群" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/08/02/Linux-集群/" class="title">Linux 集群</a></p>
+                            <p class="item-date"><time datetime="2018-08-02T09:53:02.000Z" itemprop="datePublished">2018-08-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/30/MySQL主从配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-14.jpg)" alt="MySQL主从配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/30/MySQL主从配置/" class="title">MySQL主从配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-30T08:51:21.000Z" itemprop="datePublished">2018-07-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/25/以及php-fpm结合apache配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-10.jpg)" alt="php-fpm结合apache配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/25/以及php-fpm结合apache配置/" class="title">php-fpm结合apache配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-25T04:08:06.000Z" itemprop="datePublished">2018-07-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/25/SAMBA共享文件配置/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/libs/cover-7.jpg)" alt="SAMBA共享文件配置" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux/">Linux</a></p>
+                            <p class="item-title"><a href="/2018/07/25/SAMBA共享文件配置/" class="title">SAMBA共享文件配置</a></p>
+                            <p class="item-date"><time datetime="2018-07-25T03:23:15.000Z" itemprop="datePublished">2018-07-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">8</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/DNS/">DNS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IP/">IP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LVS/">LVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/keepalived/">keepalived</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/共享/">共享</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/IP/" style="font-size: 10px;">IP</a> <a href="/tags/LVS/" style="font-size: 10px;">LVS</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/keepalived/" style="font-size: 10px;">keepalived</a> <a href="/tags/共享/" style="font-size: 10px;">共享</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2018 Leaon</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'https://itcuihao.github.io/2018/08/04/LVS负载均衡/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
